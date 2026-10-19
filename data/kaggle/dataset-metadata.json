@@ -1,0 +1,58 @@
+{
+  "title": "Uzbekistan E-Commerce: Uzum Market Dataset",
+  "id": "YOUR_USERNAME/uzum-market-ecommerce-dataset",
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "description": "Comprehensive Uzbekistan E-Commerce dataset scraped and modeled from Uzum Market, the leading national marketplace in Uzbekistan. Includes 2,260 products, 16,917 order transactions, customer segmentation (RFM), Uzum Nasiya installment data, price elasticity, and 60-day sales demand forecasting.",
+  "keywords": [
+    "ecommerce",
+    "retail",
+    "uzbekistan",
+    "market basket analysis",
+    "rfm segmentation",
+    "demand forecasting",
+    "price elasticity",
+    "central asia"
+  ],
+  "resources": [
+    {
+      "path": "products.csv",
+      "description": "2,260 real products scraped from Uzum Market API with prices, reviews, ratings, and Nasiya badges."
+    },
+    {
+      "path": "orders.csv",
+      "description": "16,917 customer purchase transactions across 13 regions in Uzbekistan (2025-2026)."
+    },
+    {
+      "path": "order_items.csv",
+      "description": "Item-level lines inside orders with unit prices, quantity, and product associations."
+    },
+    {
+      "path": "customers.csv",
+      "description": "3,500 customer demographic and regional profile records."
+    },
+    {
+      "path": "categories.csv",
+      "description": "Category hierarchy tree from Uzum marketplace."
+    },
+    {
+      "path": "customer_rfm_segments.csv",
+      "description": "Engineered RFM scores (Recency, Frequency, Monetary) with 11 distinct customer segments."
+    },
+    {
+      "path": "price_elasticity_by_category.csv",
+      "description": "Log-Log econometric price elasticity of demand (PED) by product category."
+    },
+    {
+      "path": "product_abc_xyz_analysis.csv",
+      "description": "ABC/XYZ inventory matrix and coefficient of variation."
+    },
+    {
+      "path": "sales_forecast_60d.csv",
+      "description": "60-day forward demand forecast generated via Gradient Boosting ML Forecaster."
+    }
+  ]
+}

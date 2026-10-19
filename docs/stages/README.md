@@ -1,0 +1,27 @@
+# 🌟 Uzum Market Data Science & BI Portfolio Showcase Index
+
+Ushbu katalog loyihaning barcha 25 ta bosqichini bosqichma-bosqich, to'liq jarayonlari, muammolari, me'moriy yechimlari, metrikalari va xulosalari bilan hujjatlashtirib boradi. Bu ma'lumotlar loyiha yakunida **wow design'ga ega professional portfolio web-sayt**ini yaratish uchun asosiy kontent poydevori hisoblanadi.
+
+---
+
+## 📑 Bajarilgan Bosqichlar Hisobotlari
+
+| Bosqich | Fayl | Yo'nalish | Asosiy Yutuq / Metrika |
+| :---: | :--- | :--- | :--- |
+| **01** | [`01_project_architecture.md`](./01_project_architecture.md) | MLOps & Project Setup | Cookiecutter DS modulli arxitekturasi |
+| **02** | [`02_data_sources_and_dictionary.md`](./02_data_sources_and_dictionary.md) | Data Governance | 23 ta ustunli rasmiy Data Contract, Uzum Nasiya & PVZ |
+| **03** | [`03_data_collection_strategy.md`](./03_data_collection_strategy.md) | Web Scraping & Ingestion | 2,260 ta real SKU (4.9s), 16,917 ta buyurtma tranzaksiyasi |
+| **04** | [`04_data_storage_relational_schema.md`](./04_data_storage_relational_schema.md) | Database Engineering | SQLite relyatsion sxemasi, 5 ta jadval, 8 ta B-Tree indeks |
+| **05** | [`05_etl_pipeline.md`](./05_etl_pipeline.md) | Analytics Engineering | Avtomatlashtirilgan ETL Pipeline, toza CSV va DB ombori |
+| **06** | [`06_data_validation_quality_gates.md`](./06_data_validation_quality_gates.md) | Quality & Testing | 7/7 Data Quality Gates 0.082s da 100% muvaffaqiyatli |
+
+---
+
+## 🔜 Navbatdagi Reja:
+- **07 & 08:** Feature Engineering (Bayesian Rating, Price Elasticity Index, Recency)
+- **09:** Exploratory Data Analysis (EDA Storytelling)
+- **10:** Statistical Hypothesis Testing
+- **11, 12, 13, 14:** Domain Analytics (Business, RFM Customer, Market Basket, Pricing)
+- **15, 16:** Time Series Forecasting (Prophet, ARIMA)
+- **17, 18:** Machine Learning & Recommender Engine
+- **19, 20:** Streamlit Interactive BI Dashboard & Docker Deployment

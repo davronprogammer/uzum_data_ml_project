@@ -23,9 +23,12 @@ Ushbu katalog loyihaning barcha 25 ta bosqichini bosqichma-bosqich, to'liq jaray
 | **14** | [`14_sales_pricing_elasticity.md`](./14_sales_pricing_elasticity.md) | Pricing Analytics | Log-Log narx elastikligi (PED), Elastik vs Noelastik toifalar strategiyasi |
 | **15** | [`15_time_series_analysis.md`](./15_time_series_analysis.md) | Signal Econometrics | Additiv signal dekompozitsiyasi (Trend, Haftalik mavsumiylik, Residuals) |
 | **16** | [`16_forecasting.md`](./16_forecasting.md) | ML Forecasting | Gradient Boosting (24.8% WAPE), 60 kunlik prognoz va ishonchlilik koridori |
+| **17** | [`17_machine_learning.md`](./17_machine_learning.md) | Supervised ML | Bestseller klassifikatori (0.995 ROC-AUC), Explainable AI omillar muhimligi |
+| **18** | [`18_recommendation_system.md`](./18_recommendation_system.md) | RecSys | Gibrid tavsiya tizimi (TF-IDF Cosine + Basket Co-occurrence + Cold Start) |
 
 ---
 
 ## 🔜 Navbatdagi Reja:
-- **17, 18:** Machine Learning & Recommender Engine (Bestseller Classifier, ALS RecSys)
 - **19, 20:** Streamlit Interactive BI Dashboard & Docker Deployment
+- **21, 22, 23:** Open-Source Documentation, CI/CD Actions & Kaggle Version
+- **24, 25 & Final Showcase:** Executive Report, System Design & Wow-Design Portfolio Website

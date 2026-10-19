@@ -21,10 +21,11 @@ Ushbu katalog loyihaning barcha 25 ta bosqichini bosqichma-bosqich, to'liq jaray
 | **12** | [`12_customer_rfm_analytics.md`](./12_customer_rfm_analytics.md) | Customer Analytics | 11 ta klassik RFM segmenti, Oylik Kohorta Retention tahlili |
 | **13** | [`13_product_assortment_mba.md`](./13_product_assortment_mba.md) | Product Analytics | ABC/XYZ 9-segmentli matritsa, Market Basket Analysis (Apriori Lift > 2.5) |
 | **14** | [`14_sales_pricing_elasticity.md`](./14_sales_pricing_elasticity.md) | Pricing Analytics | Log-Log narx elastikligi (PED), Elastik vs Noelastik toifalar strategiyasi |
+| **15** | [`15_time_series_analysis.md`](./15_time_series_analysis.md) | Signal Econometrics | Additiv signal dekompozitsiyasi (Trend, Haftalik mavsumiylik, Residuals) |
+| **16** | [`16_forecasting.md`](./16_forecasting.md) | ML Forecasting | Gradient Boosting (24.8% WAPE), 60 kunlik prognoz va ishonchlilik koridori |
 
 ---
 
 ## 🔜 Navbatdagi Reja:
-- **15, 16:** Time Series Forecasting (Prophet, SARIMAX, Rolling-window Backtesting)
 - **17, 18:** Machine Learning & Recommender Engine (Bestseller Classifier, ALS RecSys)
 - **19, 20:** Streamlit Interactive BI Dashboard & Docker Deployment

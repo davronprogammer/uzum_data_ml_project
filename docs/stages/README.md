@@ -27,9 +27,11 @@ Ushbu katalog loyihaning barcha 25 ta bosqichini bosqichma-bosqich, to'liq jaray
 | **18** | [`18_recommendation_system.md`](./18_recommendation_system.md) | RecSys | Gibrid tavsiya tizimi (TF-IDF Cosine + Basket Co-occurrence + Cold Start) |
 | **19** | [`19_interactive_dashboard.md`](./19_interactive_dashboard.md) | BI Application | Streamlit 5 sahifali interaktiv boshqaruv portali va AI simulyatorlari |
 | **20** | [`20_deployment_containerization.md`](./20_deployment_containerization.md) | DevOps / MLOps | Dockerfile, docker-compose.yml va xavfsiz konteynerizatsiya |
+| **21** | [`21_documentation.md`](./21_documentation.md) | Showcase & Docs | Root README.md vitrinasi, MIT License, Badgelar, Arxitektura |
 
 ---
 
 ## 🔜 Navbatdagi Reja:
-- **21, 22, 23:** Open-Source Documentation, CI/CD Actions & Kaggle Version
-- **24, 25 & Final Showcase:** Executive Report, System Design & Wow-Design Portfolio Website
+- **22-bosqich:** Kaggle Open Data Release (Dataset metadata, tozalangan CSV to'plami va storytelling notebook)
+- **GRAND FINALE:** Professional Portfolio Web Site (HTML5 / Modern CSS / Vanilla JS / Netlify-ready)
+

@@ -49,6 +49,8 @@ data/raw/*
 !data/raw/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+data/*.db
+*.db
 
 # ML Model artifacts & logs
 models/*.pkl

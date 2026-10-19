@@ -17,11 +17,14 @@ Ushbu katalog loyihaning barcha 25 ta bosqichini bosqichma-bosqich, to'liq jaray
 | **07 & 08** | [`07_08_feature_engineering.md`](./07_08_feature_engineering.md) | Feature Engineering | Bayesian Weighted Rating, Price Relative Index, Temporal & RFM |
 | **09** | [`09_exploratory_data_analysis.md`](./09_exploratory_data_analysis.md) | EDA Storytelling | 6 ta asosiy biznes savoli, 24 ta yuqori aniqlikdagi grafik |
 | **10** | [`10_statistical_hypothesis_testing.md`](./10_statistical_hypothesis_testing.md) | Inferential Statistics | 4 ta gipoteza testi (Welch t-test, Mann-Whitney U, Chi2, Spearman) |
+| **11** | [`11_business_analytics.md`](./11_business_analytics.md) | Business Analytics | Unit Economics, GMV (12.56 mlrd), Take-Rate (1.73 mlrd), Contribution Margin (76.5%) |
+| **12** | [`12_customer_rfm_analytics.md`](./12_customer_rfm_analytics.md) | Customer Analytics | 11 ta klassik RFM segmenti, Oylik Kohorta Retention tahlili |
+| **13** | [`13_product_assortment_mba.md`](./13_product_assortment_mba.md) | Product Analytics | ABC/XYZ 9-segmentli matritsa, Market Basket Analysis (Apriori Lift > 2.5) |
+| **14** | [`14_sales_pricing_elasticity.md`](./14_sales_pricing_elasticity.md) | Pricing Analytics | Log-Log narx elastikligi (PED), Elastik vs Noelastik toifalar strategiyasi |
 
 ---
 
 ## 🔜 Navbatdagi Reja:
-- **11, 12, 13, 14:** Domain Analytics (Business, RFM Customer, Market Basket, Pricing)
-- **15, 16:** Time Series Forecasting (Prophet, ARIMA)
-- **17, 18:** Machine Learning & Recommender Engine
+- **15, 16:** Time Series Forecasting (Prophet, SARIMAX, Rolling-window Backtesting)
+- **17, 18:** Machine Learning & Recommender Engine (Bestseller Classifier, ALS RecSys)
 - **19, 20:** Streamlit Interactive BI Dashboard & Docker Deployment

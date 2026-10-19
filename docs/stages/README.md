@@ -25,10 +25,11 @@ Ushbu katalog loyihaning barcha 25 ta bosqichini bosqichma-bosqich, to'liq jaray
 | **16** | [`16_forecasting.md`](./16_forecasting.md) | ML Forecasting | Gradient Boosting (24.8% WAPE), 60 kunlik prognoz va ishonchlilik koridori |
 | **17** | [`17_machine_learning.md`](./17_machine_learning.md) | Supervised ML | Bestseller klassifikatori (0.995 ROC-AUC), Explainable AI omillar muhimligi |
 | **18** | [`18_recommendation_system.md`](./18_recommendation_system.md) | RecSys | Gibrid tavsiya tizimi (TF-IDF Cosine + Basket Co-occurrence + Cold Start) |
+| **19** | [`19_interactive_dashboard.md`](./19_interactive_dashboard.md) | BI Application | Streamlit 5 sahifali interaktiv boshqaruv portali va AI simulyatorlari |
+| **20** | [`20_deployment_containerization.md`](./20_deployment_containerization.md) | DevOps / MLOps | Dockerfile, docker-compose.yml va xavfsiz konteynerizatsiya |
 
 ---
 
 ## 🔜 Navbatdagi Reja:
-- **19, 20:** Streamlit Interactive BI Dashboard & Docker Deployment
 - **21, 22, 23:** Open-Source Documentation, CI/CD Actions & Kaggle Version
 - **24, 25 & Final Showcase:** Executive Report, System Design & Wow-Design Portfolio Website

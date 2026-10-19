@@ -1,0 +1,40 @@
+# Core Data Manipulation & Math
+numpy>=1.26.0
+pandas>=2.2.0
+polars>=1.0.0
+scipy>=1.12.0
+
+# Visualization & Storytelling
+matplotlib>=3.8.0
+seaborn>=0.13.0
+plotly>=5.20.0
+
+# Data Collection & Scraping
+httpx>=0.27.0
+beautifulsoup4>=4.12.0
+tenacity>=8.2.0
+tqdm>=4.66.0
+
+# Data Validation & Configuration
+pydantic>=2.6.0
+pandera>=0.18.0
+pyyaml>=6.0.1
+loguru>=0.7.2
+
+# Statistical Analysis & Machine Learning
+statsmodels>=0.14.0
+scikit-learn>=1.4.0
+lightgbm>=4.3.0
+xgboost>=2.0.0
+optuna>=3.6.0
+shap>=0.45.0
+
+# Market Basket Analysis & Assortment
+mlxtend>=0.23.0
+
+# Dashboard & Delivery
+streamlit>=1.35.0
+
+# Testing & Code Quality
+pytest>=8.1.0
+ruff>=0.4.0

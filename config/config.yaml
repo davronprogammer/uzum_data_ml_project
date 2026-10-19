@@ -1,0 +1,30 @@
+project:
+  name: "uzum-market-analytics-ds"
+  version: "0.1.0"
+  description: "End-to-End Data Science, Machine Learning & Business Intelligence platform for Uzum Market"
+  author: "Data Science Team"
+  seed: 42
+
+paths:
+  raw_data_dir: "data/raw"
+  processed_data_dir: "data/processed"
+  models_dir: "models"
+  reports_dir: "reports"
+  figures_dir: "reports/figures"
+
+data_collection:
+  base_url: "https://uzum.uz"
+  request_timeout: 15
+  rate_limit_delay_seconds: 1.5
+  max_retries: 3
+  batch_size: 50
+
+processing:
+  iqr_multiplier: 1.5
+  min_reviews_for_bayesian: 5
+  test_size: 0.2
+
+business_metrics:
+  currency: "UZS"
+  vat_rate: 0.12
+  default_commission_rate: 0.15

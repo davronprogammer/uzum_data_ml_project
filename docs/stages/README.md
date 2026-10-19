@@ -16,11 +16,11 @@ Ushbu katalog loyihaning barcha 25 ta bosqichini bosqichma-bosqich, to'liq jaray
 | **06** | [`06_data_validation_quality_gates.md`](./06_data_validation_quality_gates.md) | Quality & Testing | 7/7 Data Quality Gates 0.082s da 100% muvaffaqiyatli |
 | **07 & 08** | [`07_08_feature_engineering.md`](./07_08_feature_engineering.md) | Feature Engineering | Bayesian Weighted Rating, Price Relative Index, Temporal & RFM |
 | **09** | [`09_exploratory_data_analysis.md`](./09_exploratory_data_analysis.md) | EDA Storytelling | 6 ta asosiy biznes savoli, 24 ta yuqori aniqlikdagi grafik |
+| **10** | [`10_statistical_hypothesis_testing.md`](./10_statistical_hypothesis_testing.md) | Inferential Statistics | 4 ta gipoteza testi (Welch t-test, Mann-Whitney U, Chi2, Spearman) |
 
 ---
 
 ## 🔜 Navbatdagi Reja:
-- **10:** Statistical Hypothesis Testing (A/B testing, Mann-Whitney U, Chi-Square)
 - **11, 12, 13, 14:** Domain Analytics (Business, RFM Customer, Market Basket, Pricing)
 - **15, 16:** Time Series Forecasting (Prophet, ARIMA)
 - **17, 18:** Machine Learning & Recommender Engine

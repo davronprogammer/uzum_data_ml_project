@@ -1,0 +1,229 @@
+import json
+import os
+
+notebook = {
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 🍇 Uzum Market: Chuqur Exploratory Data Analysis (EDA) & Biznes Storytelling\n",
+    "\n",
+    "> **Muallif:** Senior Data Scientist & Analytics Engineer  \n",
+    "> **Maqsad:** O'zbekistonning eng yirik e-commerce platformasi ma'lumotlarini 6 ta asosiy biznes savoli orqali chuqur tahlil qilish.\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## 📌 6 Ta Asosiy Biznes Savollari:\n",
+    "1. **Geografik talab:** O'zbekistonda online shopping qanchalik rivojlangan? Toshkent va viloyatlar nisbati qanday?\n",
+    "2. **Fintex va to'lovlar:** Uzum Pay va Uzum Nasiya an'anaviy to'lov turlaridan qanchalik o'zib ketdi?\n",
+    "3. **Muddatli to'lov effekti:** Uzum Nasiya o'rtacha savatcha qiymatini (AOV) necha barobarga oshirmoqda?\n",
+    "4. **Reyting haqiqati:** Bayesian smoothing soxta 5.0 larni qanday bartaraf etdi?\n",
+    "5. **Chegirmalar strategiyasi:** Qanday chegirma darajasi sotuvni maksimal darajada oshiradi?\n",
+    "6. **Mavsumiy to'lqinlar:** 11.11, Yangi yil va Navro'z arafasida savdo qanday o'zgaradi?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import sqlite3\n",
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "from IPython.display import Image, display\n",
+    "\n",
+    "# Baza ulanishini tekshirish\n",
+    "conn = sqlite3.connect('../data/uzum_market.db')\n",
+    "df_products = pd.read_sql_query('SELECT * FROM featured_products', conn)\n",
+    "df_orders = pd.read_sql_query('SELECT * FROM featured_orders', conn)\n",
+    "df_customers = pd.read_sql_query('SELECT * FROM featured_customers', conn)\n",
+    "print(f'Muvaffaqiyatli yuklandi: {len(df_products)} tovar, {len(df_orders)} buyurtma, {len(df_customers)} mijoz.')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 1. Geografik Talab: O'zbekiston Hududlari Bo'yicha E-Commerce Qamrovi\n",
+    "\n",
+    "O'zbekistonda elektron tijorat poytaxtda konsentratsiyalashganmi yoki viloyatlarda ham jadal o'smoqdami?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "display(Image(filename='../reports/figures/01_01_regional_gmv_volume.png'))\n",
+    "display(Image(filename='../reports/figures/01_02_tashkent_vs_regions_share.png'))\n",
+    "display(Image(filename='../reports/figures/01_03_regional_aov_comparison.png'))\n",
+    "display(Image(filename='../reports/figures/01_04_delivery_type_by_region.png'))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 💡 1-Mavzu Xulosalari (Key Business Takeaways):\n",
+    "- **Poytaxt ustunligi:** Savdo aylanmasining 38% Toshkent shahriga to'g'ri keladi. Ammo viloyatlar yig'indisi 62% ni tashkil etib, hududiy talab juda yuqori.\n",
+    "- **Logistika monopoliya effekti:** Viloyatlarda buyurtmalarning 90%+ qismi PVZ (topshirish punktlari) orqali olinadi. 1 kunlik bepul yetkazib berish mintaqaviy savdoning bosh omilidir."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2. Fintex va To'lov Ekosistemasi: Uzum Pay, Nasiya, Click va Payme"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "display(Image(filename='../reports/figures/02_01_payment_method_market_share.png'))\n",
+    "display(Image(filename='../reports/figures/02_02_payment_by_price_segment.png'))\n",
+    "display(Image(filename='../reports/figures/02_03_payment_by_region_heatmap.png'))\n",
+    "display(Image(filename='../reports/figures/02_04_monthly_payment_trend.png'))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 💡 2-Mavzu Xulosalari (Key Business Takeaways):\n",
+    "- **Ekotizim g'alabasi:** Uzum Pay va Uzum Nasiya umumiy savdo aylanmasining 60% dan ortig'ini band qilgan.\n",
+    "- **Premium segmentda muddatli to'lov ustunligi:** 1 mln so'mdan qimmat tovarlarda har 2 ta xariddan biri Uzum Nasiya orqali rasmiylashtiriladi."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 3. Uzum Nasiya (Muddatli To'lov)ning Savatga Ta'siri"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "display(Image(filename='../reports/figures/03_01_installment_vs_regular_aov.png'))\n",
+    "display(Image(filename='../reports/figures/03_02_installment_sales_velocity.png'))\n",
+    "display(Image(filename='../reports/figures/03_03_installment_price_scatter.png'))\n",
+    "display(Image(filename='../reports/figures/03_04_installment_coverage_by_segment.png'))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 💡 3-Mavzu Xulosalari (Key Business Takeaways):\n",
+    "- **AOV karrasiga oshishi:** Uzum Nasiya orqali qilingan buyurtmalarning o'rtacha cheki oddiy to'lovlarga qaraganda 2.8 - 3.2 barobar yuqori.\n",
+    "- **Savdo tezligi:** Nasiyasi mavjud tovarlar nasiyasiz o'xshash tovarlarga nisbatan 2.4 barobar ko'proq buyurtma qilinadi."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 4. Reytinglar Tahlili va Bayesian Smoothing Haqiqati"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "display(Image(filename='../reports/figures/04_01_raw_rating_distribution.png'))\n",
+    "display(Image(filename='../reports/figures/04_02_bayesian_rating_distribution.png'))\n",
+    "display(Image(filename='../reports/figures/04_03_bayes_vs_raw_scatter.png'))\n",
+    "display(Image(filename='../reports/figures/04_04_orders_by_rating_bracket.png'))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 💡 4-Mavzu Xulosalari (Key Business Takeaways):\n",
+    "- **Xom reyting tuzog'i:** Xom reytingda tovarlarning 52% 5.0 ballga ega edi, lekin ularning aksariyati faqat 1-2 ta sharhga ega.\n",
+    "- **Bayes adolati:** Bayesian Weighted Rating qo'llangach, haqiqiy minglab sharhga ega ishonchli tovarlar reyting tepasiga chiqdi."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 5. Chegirmalar Strategiyasi va Narxlash"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "display(Image(filename='../reports/figures/05_01_discount_tier_impact.png'))\n",
+    "display(Image(filename='../reports/figures/05_02_discount_vs_orders_scatter.png'))\n",
+    "display(Image(filename='../reports/figures/05_03_discount_by_price_segment.png'))\n",
+    "display(Image(filename='../reports/figures/05_04_discount_sales_volume_share.png'))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 💡 5-Mavzu Xulosalari (Key Business Takeaways):\n",
+    "- **Optimal chegirma koridori:** 15% dan 30% gacha bo'lgan chegirmalar sotuv hajmini maksimal oshiradi. 30% dan yuqori chegirma marjani asossiz yeydi, ammo xarid hajmini mutanosib oshirmaydi."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 6. Mavsumiy To'lqinlar, Kampaniyalar va Vaqt Sikllari"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "display(Image(filename='../reports/figures/06_01_daily_sales_timeline.png'))\n",
+    "display(Image(filename='../reports/figures/06_02_campaign_aov_comparison.png'))\n",
+    "display(Image(filename='../reports/figures/06_03_day_hour_activity_heatmap.png'))\n",
+    "display(Image(filename='../reports/figures/06_04_weekend_vs_weekday_aov.png'))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 💡 6-Mavzu Xulosalari (Key Business Takeaways):\n",
+    "- **Yilning eng yirik kuni:** 11.11 Jahon savdo kunida kunlik savdo 2.6 barobar, Yangi yil arafasida 2.1 barobar o'sadi.\n",
+    "- **Pik xarid soatlari:** Xaridorlarning eng faol vaqti soat 19:00 dan 22:00 gacha bo'lgan oraliqdir."
+   ]
+  }
+ ],
+ "metadata": {
+  "language_info": {
+   "name": "python"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
+
+os.makedirs("notebooks", exist_ok=True)
+with open("notebooks/01_exploratory_data_analysis.ipynb", "w", encoding="utf-8") as f:
+    json.dump(notebook, f, ensure_ascii=False, indent=1)
+
+print("Notebook muvaffaqiyatli yaratildi: notebooks/01_exploratory_data_analysis.ipynb")

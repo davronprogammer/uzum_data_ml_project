@@ -221,7 +221,8 @@ with tabs[0]:
     order_count = len(filtered_orders)
     aov_net = total_net_gmv / len(delivered_orders) if len(delivered_orders) > 0 else 0
     take_rate_rev = total_net_gmv * 0.15
-    net_cm_per_order = (aov_net * 0.15) - (aov_net * 0.015) - 15000
+    net_cm_per_order = (aov_net * 0.15) - (aov_net * 0.015) - 15000 if aov_net > 0 else 0
+    cm_pct_display = f"{(net_cm_per_order / (aov_net * 0.15)) * 100:.1f}% sof foyda marjasi" if (aov_net > 0 and (aov_net * 0.15) > 0) else "N/A (Sotuv yo'q)"
 
     # 5 ta KPI Kartochkalari
     col1, col2, col3, col4, col5 = st.columns(5)
@@ -267,7 +268,7 @@ with tabs[0]:
         <div class='kpi-container'>
             <div class='kpi-label'>Contribution Margin</div>
             <div class='kpi-value'>{int(net_cm_per_order / 1e3):,}K</div>
-            <div class='kpi-subtext kpi-positive'>76.5% sof foyda marjasi</div>
+            <div class='kpi-subtext kpi-positive'>{cm_pct_display}</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -299,7 +300,8 @@ with tabs[0]:
     with chart_col2:
         st.markdown("<div class='section-title'>To'lov Turlari Bo'yicha Moliya Ulushi</div>", unsafe_allow_html=True)
         pay_dist = filtered_orders.groupby("payment_method")["total_amount"].sum().reset_index()
-        pay_dist["ulush_pct"] = (pay_dist["total_amount"] / pay_dist["total_amount"].sum()) * 100
+        total_pay_amt = pay_dist["total_amount"].sum()
+        pay_dist["ulush_pct"] = (pay_dist["total_amount"] / total_pay_amt * 100) if total_pay_amt > 0 else 0.0
 
         donut = alt.Chart(pay_dist).mark_arc(innerRadius=65, stroke="#fff").encode(
             theta=alt.Theta("total_amount:Q"),
@@ -314,12 +316,15 @@ with tabs[0]:
 
     with ue_col1:
         st.write("###### Bitta Buyurtma (Unit)ning Xarajat va Daromad Balansi:")
+        fulfillment_share = f"-{(15000 / aov_net) * 100:.1f}%" if aov_net > 0 else "N/A"
+        cm_share = f"{(net_cm_per_order / (aov_net * 0.15)) * 100:.1f}%" if (aov_net > 0 and (aov_net * 0.15) > 0) else "N/A"
+
         ue_table = pd.DataFrame([
-            {"Operatsion Ko'rsatkich": "O'rtacha Savat Qiymati (AOV)", "Summa (UZS)": f"{int(aov_net):,}", "Ulush": "100.0%"},
-            {"Operatsion Ko'rsatkich": "Uzum Komissiyasi (Take-Rate 15%)", "Summa (UZS)": f"+{int(aov_net * 0.15):,}", "Ulush": "+15.0%"},
-            {"Operatsion Ko'rsatkich": "To'lov Shlyuzi Xarajati (Acquiring 1.5%)", "Summa (UZS)": f"-{int(aov_net * 0.015):,}", "Ulush": "-1.5%"},
-            {"Operatsion Ko'rsatkich": "Topshirish Punkti va Logistika (Fulfillment)", "Summa (UZS)": "-15,000", "Ulush": f"-{(15000/aov_net)*100:.1f}%"},
-            {"Operatsion Ko'rsatkich": "Sof Operatsion Marja (Contribution Margin)", "Summa (UZS)": f"{int(net_cm_per_order):,}", "Ulush": f"{(net_cm_per_order/(aov_net*0.15))*100:.1f}%"}
+            {"Operatsion Ko'rsatkich": "O'rtacha Savat Qiymati (AOV)", "Summa (UZS)": f"{int(aov_net):,}", "Ulush": "100.0%" if aov_net > 0 else "N/A"},
+            {"Operatsion Ko'rsatkich": "Uzum Komissiyasi (Take-Rate 15%)", "Summa (UZS)": f"+{int(aov_net * 0.15):,}", "Ulush": "+15.0%" if aov_net > 0 else "N/A"},
+            {"Operatsion Ko'rsatkich": "To'lov Shlyuzi Xarajati (Acquiring 1.5%)", "Summa (UZS)": f"-{int(aov_net * 0.015):,}", "Ulush": "-1.5%" if aov_net > 0 else "N/A"},
+            {"Operatsion Ko'rsatkich": "Topshirish Punkti va Logistika (Fulfillment)", "Summa (UZS)": "-15,000" if aov_net > 0 else "0", "Ulush": fulfillment_share},
+            {"Operatsion Ko'rsatkich": "Sof Operatsion Marja (Contribution Margin)", "Summa (UZS)": f"{int(net_cm_per_order):,}", "Ulush": cm_share}
         ])
         st.dataframe(ue_table, hide_index=True, use_container_width=True)
 

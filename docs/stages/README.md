@@ -14,12 +14,12 @@ Ushbu katalog loyihaning barcha 25 ta bosqichini bosqichma-bosqich, to'liq jaray
 | **04** | [`04_data_storage_relational_schema.md`](./04_data_storage_relational_schema.md) | Database Engineering | SQLite relyatsion sxemasi, 5 ta jadval, 8 ta B-Tree indeks |
 | **05** | [`05_etl_pipeline.md`](./05_etl_pipeline.md) | Analytics Engineering | Avtomatlashtirilgan ETL Pipeline, toza CSV va DB ombori |
 | **06** | [`06_data_validation_quality_gates.md`](./06_data_validation_quality_gates.md) | Quality & Testing | 7/7 Data Quality Gates 0.082s da 100% muvaffaqiyatli |
+| **07 & 08** | [`07_08_feature_engineering.md`](./07_08_feature_engineering.md) | Feature Engineering | Bayesian Weighted Rating, Price Relative Index, Temporal & RFM |
 
 ---
 
 ## 🔜 Navbatdagi Reja:
-- **07 & 08:** Feature Engineering (Bayesian Rating, Price Elasticity Index, Recency)
-- **09:** Exploratory Data Analysis (EDA Storytelling)
+- **09:** Exploratory Data Analysis (EDA Storytelling & Visualizations)
 - **10:** Statistical Hypothesis Testing
 - **11, 12, 13, 14:** Domain Analytics (Business, RFM Customer, Market Basket, Pricing)
 - **15, 16:** Time Series Forecasting (Prophet, ARIMA)

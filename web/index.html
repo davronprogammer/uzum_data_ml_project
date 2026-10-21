@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1ea">
+  <meta name="description" content="An evidence-led case study in marketplace analytics, data engineering, and predictive experiments using a public product catalog snapshot and simulated transaction history.">
+  <title>Uzum Market — Data Science Case Study</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script src="data/recommendation-examples.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to case study</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+  <header class="site-header">
+    <a class="wordmark" href="#top" aria-label="Uzum Market data science case study, top">
+      <span class="wordmark__name">Uzum Market</span>
+      <span class="wordmark__descriptor">Independent data science case study</span>
+    </a>
+    <nav class="primary-nav" aria-label="Case study sections">
+      <a href="#overview">Overview</a>
+      <a href="#data-method">Data &amp; method</a>
+      <a href="#findings">Findings</a>
+      <a href="#customers">Customers</a>
+      <a href="#models">Models</a>
+      <a href="#engineering">Engineering</a>
+      <a href="#limits">Limits</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero section-shell" id="top" aria-labelledby="hero-title">
+      <div class="hero__copy">
+        <p class="eyebrow"><span>Case study 01</span><span>Marketplace analytics · Uzbekistan</span></p>
+        <h1 id="hero-title">Reading a marketplace <em>through data.</em></h1>
+        <p class="hero__dek">An end-to-end analytics project exploring the product, customer, and operational questions behind an online marketplace.</p>
+        <p class="provenance-pill"><span class="provenance-pill__rule" aria-hidden="true"></span>Public product catalog snapshot <span aria-hidden="true">·</span> Simulated transaction history</p>
+        <a class="text-link hero__link" href="#overview">Explore the case study <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__figure" aria-label="Project workflow from catalog to analytical experiments">
+        <p class="hero__figure-label">A system, from source to decision</p>
+        <svg class="workflow-sketch" viewBox="0 0 520 390" role="img" aria-labelledby="workflow-title workflow-description">
+          <title id="workflow-title">Project workflow sketch</title>
+          <desc id="workflow-description">A public product snapshot branches into a synthetic order generator, then moves through data preparation, analysis, experiments, and a Streamlit interface. This is an explanatory diagram, not a run log.</desc>
+          <defs>
+            <marker id="workflow-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#5e3aa8" /></marker>
+            <marker id="workflow-arrow-rust" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#b75f3d" /></marker>
+          </defs>
+          <path class="workflow-path" pathLength="1" d="M208 76 H312" marker-end="url(#workflow-arrow)" />
+          <path class="workflow-path workflow-path--branch" pathLength="1" d="M402 104 V132 H118 V160" marker-end="url(#workflow-arrow-rust)" />
+          <path class="workflow-path" pathLength="1" d="M208 188 H312" marker-end="url(#workflow-arrow)" />
+          <path class="workflow-path" pathLength="1" d="M402 216 V250 H260 V280" marker-end="url(#workflow-arrow)" />
+          <rect class="workflow-node-box" x="28" y="48" width="180" height="56" />
+          <rect class="workflow-node-box" x="312" y="48" width="180" height="56" />
+          <rect class="workflow-node-box" x="28" y="160" width="180" height="56" />
+          <rect class="workflow-node-box" x="312" y="160" width="180" height="56" />
+          <rect class="workflow-node-box workflow-node-box--accent" x="170" y="280" width="180" height="56" />
+          <text class="workflow-label" x="42" y="67">01 / SOURCE</text>
+          <text class="workflow-node" x="42" y="90">Product catalog</text>
+          <text class="workflow-label" x="326" y="67">02 / SIMULATION</text>
+          <text class="workflow-node" x="326" y="90">Orders &amp; customers</text>
+          <text class="workflow-label" x="42" y="179">03 / PREPARATION</text>
+          <text class="workflow-node" x="42" y="202">ETL + features</text>
+          <text class="workflow-label" x="326" y="179">04 / ANALYSIS</text>
+          <text class="workflow-node" x="326" y="202">EDA + models</text>
+          <text class="workflow-label" x="184" y="299">05 / INTERFACE</text>
+          <text class="workflow-node" x="184" y="322">Streamlit BI</text>
+          <text class="workflow-footnote" x="32" y="374">Explanatory project map · not a verified execution trace</text>
+        </svg>
+        <p class="hero__figure-mobile">Catalog → simulation → preparation → analysis → interface. The order and customer history is generated for this project.</p>
+      </div>
+      <div class="hero__index" aria-hidden="true">01—22</div>
+    </section>
+
+    <section class="intro-band" id="overview" aria-labelledby="overview-title">
+      <div class="section-shell intro-band__grid">
+        <p class="section-index">01 <span>Project overview</span></p>
+        <div class="intro-band__body">
+          <h2 id="overview-title">A marketplace has more questions than a single metric can answer.</h2>
+          <p>The project follows an analytics lifecycle: collect a product snapshot, construct transaction scenarios where private order data is unavailable, prepare the data, and explore questions about assortment, pricing, customers, and demand.</p>
+          <p>It is a portfolio study of methods and engineering choices. Transaction-derived results describe the modeled dataset, not Uzum Market’s internal operations.</p>
+        </div>
+        <dl class="facts-ledger" aria-label="Repository dataset facts">
+          <div><dt>Products</dt><dd>2,260</dd><small>catalog rows</small></div>
+          <div><dt>Orders</dt><dd>16,917</dd><small>generated records</small></div>
+          <div><dt>Customers</dt><dd>3,500</dd><small>generated profiles</small></div>
+          <div><dt>Line items</dt><dd>28,714</dd><small>simulated basket rows</small></div>
+        </dl>
+        <p class="facts-note">Counts from stored processed CSV files. Product catalog provenance is represented by the collection code and saved snapshot; exact crawl execution is not independently logged.</p>
+      </div>
+    </section>
+
+    <section class="section-shell narrative-section" id="data-method" aria-labelledby="data-title">
+      <div class="section-index">02 <span>Data &amp; method</span></div>
+      <div class="section-content">
+        <p class="eyebrow">The data boundary is part of the method</p>
+        <h2 id="data-title">Two sources of evidence.<br><em>Different kinds of evidence.</em></h2>
+        <div class="source-split">
+          <article class="source-note source-note--catalog">
+            <p class="source-note__number">A / Public catalog</p>
+            <h3>Product snapshot</h3>
+            <p>The scraper implementation requests Uzum’s public mobile feed and parses product attributes such as price, rating, and review count.</p>
+            <p class="source-path">Source <code>src/data_collection/scraper.py</code><br>Snapshot <code>data/raw/uzum_catalog_raw.json</code></p>
+          </article>
+          <article class="source-note source-note--simulated">
+            <p class="source-note__number">B / Generated history</p>
+            <h3>Orders &amp; customers</h3>
+            <p>Because private transaction records are not available here, the generator creates customer profiles, baskets, payment assignments, regions, statuses, and dates from randomized rules.</p>
+            <p class="source-path">Source <code>src/data_collection/order_generator.py</code><br>Stored output <code>data/raw/uzum_orders_raw.json</code></p>
+          </article>
+        </div>
+        <p class="method-warning"><strong>Interpretation rule.</strong> GMV, payment comparisons, retention, regional patterns, basket associations, and forecast inputs below are calculations on generated transaction history. They are not Uzum internal transaction records or measured marketplace outcomes.</p>
+        <div class="pipeline-ledger" aria-label="Project workflow explained in text">
+          <div><span>01</span><p>Collect<br><small>public catalog feed</small></p></div>
+          <div><span>02</span><p>Generate<br><small>modeled transaction history</small></p></div>
+          <div><span>03</span><p>Prepare<br><small>SQLite, CSV, features</small></p></div>
+          <div><span>04</span><p>Explore<br><small>analytics and experiments</small></p></div>
+          <div><span>05</span><p>Deliver<br><small>Streamlit interface</small></p></div>
+        </div>
+        <p class="diagram-caption">Project map based on modules in <code>src/data_collection/</code>, <code>src/processing/</code>, <code>src/analytics/</code>, <code>src/models/</code>, and <code>src/dashboard/</code>. It explains structure, not execution status.</p>
+      </div>
+    </section>
+
+    <section class="dark-section" aria-labelledby="engineering-title">
+      <div class="section-shell narrative-section narrative-section--dark" id="engineering">
+        <div class="section-index">03 <span>Engineering lifecycle</span></div>
+        <div class="section-content">
+          <p class="eyebrow">From files to analytical features</p>
+          <h2 id="engineering-title">A modular path from raw inputs <em>to questions worth asking.</em></h2>
+          <div class="engineering-grid">
+            <article><span class="engineering-grid__index">01</span><h3>Relational shape</h3><p>Five core entities are described in <code>src/database/schema.py</code>: categories, products, customers, orders, and order items.</p></article>
+            <article><span class="engineering-grid__index">02</span><h3>ETL and checks</h3><p><code>src/processing/etl_pipeline.py</code> transforms JSON inputs into SQLite tables and processed CSV files. Quality tests cover keys, ranges, references, and totals.</p></article>
+            <article><span class="engineering-grid__index">03</span><h3>Features for analysis</h3><p><code>src/processing/feature_builder.py</code> adds Bayesian rating, category-relative price, discount tiers, time flags, and customer RFM base measures.</p></article>
+          </div>
+          <figure class="engineering-visual">
+            <svg viewBox="0 0 1040 280" role="img" aria-labelledby="etl-title etl-description">
+              <title id="etl-title">Explanatory ETL and feature workflow</title>
+              <desc id="etl-description">Raw catalog and generated order files pass through normalization and quality checks, then into five relational entities and feature-building outputs for analysis. This diagram describes the repository structure, not a successful pipeline run.</desc>
+              <defs><marker id="etl-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#c7a8ff" /></marker></defs>
+              <path class="eng-route" d="M233 128 H280 M495 128 H542 M757 128 H804" marker-end="url(#etl-arrow)" />
+              <rect class="eng-node-box" x="18" y="78" width="215" height="100" />
+              <rect class="eng-node-box" x="280" y="78" width="215" height="100" />
+              <rect class="eng-node-box" x="542" y="78" width="215" height="100" />
+              <rect class="eng-node-box" x="804" y="78" width="218" height="100" />
+              <text class="eng-label" x="34" y="104">INPUT FILES</text>
+              <text class="eng-node" x="34" y="135">Public catalog</text>
+              <text class="eng-node" x="34" y="157">Simulated order files</text>
+              <text class="eng-label" x="296" y="104">ETL + QUALITY</text>
+              <text class="eng-node" x="296" y="135">Normalize fields</text>
+              <text class="eng-node" x="296" y="157">Check keys / ranges</text>
+              <text class="eng-label" x="558" y="104">RELATIONAL DATA</text>
+              <text class="eng-node" x="558" y="135">Five core entities</text>
+              <text class="eng-node" x="558" y="157">Processed tables</text>
+              <text class="eng-label" x="820" y="104">FEATURES</text>
+              <text class="eng-node" x="820" y="135">Ratings / price</text>
+              <text class="eng-node" x="820" y="157">Time / customer RFM</text>
+              <text class="eng-foot" x="18" y="230">Repository-based explanatory map · not an execution trace · generated history remains synthetic</text>
+            </svg>
+            <figcaption>ETL and feature stages are represented by <code>src/processing/etl_pipeline.py</code> and <code>src/processing/feature_builder.py</code>. Table write behavior and quality checks still require a fresh pipeline run to verify.</figcaption>
+            <p class="engineering-visual__mobile">Catalog and generated order files → ETL normalization and key/range checks → five relational entities → rating, price, time, and customer features. This is a repository map, not a pipeline run record.</p>
+          </figure>
+          <p class="engineering-caveat">These modules and outputs are present. The audit did not execute the pipeline or test suite. ETL uses table replacement when writing with <code>to_sql</code>, so schema constraints and index claims require a fresh database check.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell narrative-section findings-section" id="findings" aria-labelledby="findings-title">
+      <div class="section-index">04 <span>EDA &amp; findings</span></div>
+      <div class="section-content">
+        <p class="eyebrow">Six questions, one important boundary</p>
+        <h2 id="findings-title">Exploration is a way to decide <em>what to test next.</em></h2>
+        <p class="section-lede">The EDA module groups 24 charts into six themes: geography, payment behavior, installment mechanics, rating features, discounts, and time patterns. One selected source figure represents each theme; each transaction-derived view describes generated history, not observed Uzum operations. On narrow screens, scroll charts sideways or open them full size.</p>
+
+        <figure class="feature-figure feature-figure--wide">
+          <div class="figure-heading"><p class="figure-kicker">Catalog signals · feature engineering</p><h3>How does a rating change when review volume is considered?</h3></div>
+          <div class="figure-scroll" tabindex="0" role="region" aria-label="Rating and review volume chart. Scroll horizontally on narrow screens.">
+            <img src="assets/charts/bayesian-rating-comparison.png" width="4200" height="1800" alt="Two scatter plots compare raw product ratings and Bayesian-smoothed ratings against review count on a logarithmic horizontal scale. The smoothed values are pulled toward a common prior, especially for products with fewer reviews." loading="lazy" decoding="async">
+          </div>
+          <figcaption><span>01 / Rating and review volume</span><span>Source: <code>reports/figures/04_03_bayes_vs_raw_scatter.png</code></span></figcaption>
+          <a class="figure-expand" href="assets/charts/bayesian-rating-comparison.png" target="_blank" rel="noopener noreferrer">Open full-size figure <span aria-hidden="true">↗</span></a>
+          <p class="figure-note">This chart illustrates the feature-engineering choice in <code>src/processing/feature_builder.py</code>. It shows catalog rating/review fields and their smoothed transformation; it does not establish that higher ratings cause more sales. The raw-rating pipeline maps missing values to zero, so the zero cluster also reflects data preparation.</p>
+        </figure>
+
+        <div class="figure-pair">
+          <figure class="feature-figure">
+            <div class="figure-heading"><p class="figure-kicker">02 / Geography · generated orders</p><h3>Where does the simulator place order value?</h3></div>
+            <div class="figure-scroll" tabindex="0" role="region" aria-label="Regional order value chart. Scroll horizontally on narrow screens.">
+              <img src="assets/charts/modeled-regional-order-value.png" width="3600" height="2100" alt="Horizontal bars show gross order value by region in the generated dataset, with Tashkent city largest. This is a distribution from simulated orders, not observed regional Uzum sales." loading="lazy" decoding="async">
+            </div>
+            <figcaption><span>02 / Regional mix</span><span><code>reports/figures/01_01_regional_gmv_volume.png</code></span></figcaption>
+            <a class="figure-expand" href="assets/charts/modeled-regional-order-value.png" target="_blank" rel="noopener noreferrer">Open full-size figure <span aria-hidden="true">↗</span></a>
+            <p class="figure-note">The generator sets region weights. Read this as a profile of the simulation inputs and resulting sample, not a market-demand finding.</p>
+          </figure>
+          <figure class="feature-figure">
+            <div class="figure-heading"><p class="figure-kicker">03 / Payment behavior · generated orders</p><h3>How do assigned payment methods compare?</h3></div>
+            <div class="figure-scroll" tabindex="0" role="region" aria-label="Payment mix chart. Scroll horizontally on narrow screens.">
+              <img src="assets/charts/payment-mix-simulation.png" width="3000" height="1800" alt="Grouped bars compare each generated payment method's share of transaction count with its share of gross merchandise value. Uzum Nasiya has the largest GMV share in this simulated sample; labels and categories are in Uzbek in the source chart." loading="lazy" decoding="async">
+            </div>
+            <figcaption><span>03 / Payment mix</span><span><code>reports/figures/02_01_payment_method_market_share.png</code></span></figcaption>
+            <a class="figure-expand" href="assets/charts/payment-mix-simulation.png" target="_blank" rel="noopener noreferrer">Open full-size figure <span aria-hidden="true">↗</span></a>
+            <p class="figure-note">The chart compares generated transaction-count and GMV shares. Uzbek labels map to Uzum Nasiya, Uzum Pay, Click, Payme, and cash/card at pickup. Payment assignment probabilities are configured by the order generator, so the mix is a scenario output—not a market estimate or measured payment preference.</p>
+          </figure>
+        </div>
+
+        <div class="figure-pair">
+          <figure class="feature-figure">
+            <div class="figure-heading"><p class="figure-kicker">04 / Installments · public catalog snapshot</p><h3>How does the listed monthly amount relate to product price?</h3></div>
+            <div class="figure-scroll" tabindex="0" role="region" aria-label="Installment amount and price chart. Scroll horizontally on narrow screens.">
+              <img src="assets/charts/installment-payment-mechanics.png" width="3000" height="1800" alt="A scatter plot of product price against the monthly amount parsed from installment badges in the saved product snapshot. The points form an almost straight line; labels are in Uzbek." loading="lazy" decoding="async">
+            </div>
+            <figcaption><span>04 / Installment mechanics</span><span><code>reports/figures/03_03_installment_price_scatter.png</code></span></figcaption>
+            <a class="figure-expand" href="assets/charts/installment-payment-mechanics.png" target="_blank" rel="noopener noreferrer">Open full-size figure <span aria-hidden="true">↗</span></a>
+            <p class="figure-note">The scraper extracts digits from public product badges for this comparison. The saved pattern is descriptive; it does not verify financing terms, fees, eligibility, or customer response.</p>
+          </figure>
+          <figure class="feature-figure">
+            <div class="figure-heading"><p class="figure-kicker">05 / Price and discount · catalog fields</p><h3>How does listed discount vary by price band?</h3></div>
+            <div class="figure-scroll" tabindex="0" role="region" aria-label="Listed discount by category-relative price band chart. Scroll horizontally on narrow screens.">
+              <img src="assets/charts/discount-by-price-band.png" width="2400" height="1800" alt="Three purple bars show mean discount percentage across Budget, Mid-Range, and Premium product-price segments, decreasing across these bins in the saved chart. This is a descriptive catalog comparison, not a causal discount effect." loading="lazy" decoding="async">
+            </div>
+            <figcaption><span>05 / Discount by price band</span><span><code>reports/figures/05_03_discount_by_price_segment.png</code></span></figcaption>
+            <a class="figure-expand" href="assets/charts/discount-by-price-band.png" target="_blank" rel="noopener noreferrer">Open full-size figure <span aria-hidden="true">↗</span></a>
+            <p class="figure-note">The chart groups listed discounts by category-relative price: below 0.70×, 0.70–1.30×, and above 1.30× the category median. It is a catalog comparison, not an estimate of how discounts change demand.</p>
+          </figure>
+        </div>
+
+        <figure class="feature-figure feature-figure--wide feature-figure--timeline">
+          <div class="figure-heading"><p class="figure-kicker">06 / Time patterns · generated transaction history</p><h3>What shape does the modeled daily series take?</h3></div>
+          <div class="figure-scroll" tabindex="0" role="region" aria-label="Daily generated order value time series. Scroll horizontally on narrow screens.">
+            <img src="assets/charts/simulated-daily-order-value.png" width="4200" height="1800" alt="A jagged line of daily gross order value with a seven-day rolling trend over the generated order history from late 2025 to 2026. The trend rises, but the series is synthetic and does not represent actual marketplace growth." loading="lazy" decoding="async">
+          </div>
+          <figcaption><span>06 / Daily modeled GMV</span><span><code>reports/figures/06_01_daily_sales_timeline.png</code></span></figcaption>
+          <a class="figure-expand" href="assets/charts/simulated-daily-order-value.png" target="_blank" rel="noopener noreferrer">Open full-size figure <span aria-hidden="true">↗</span></a>
+          <p class="figure-note">Dates and seasonal behavior originate in the transaction generator. The upward pattern is not evidence of actual Uzum growth or a validated demand trend.</p>
+        </figure>
+
+        <div class="method-visual" aria-labelledby="test-map-title">
+          <div><p class="figure-kicker">Statistical methods · no disputed results shown</p><h3 id="test-map-title">Match the test to the question.</h3><p>The implementation contains tests for group differences, categorical association, and ranked relationships. Their saved summary is omitted because its figures conflict with the stored outputs and documentation.</p></div>
+          <div class="test-map" role="img" aria-label="Explanatory map of four statistical procedures implemented in the project: Welch and Mann–Whitney compare groups, chi-square checks categorical association, and Spearman measures rank association.">
+            <div><span>Two group means</span><strong>Welch’s t-test</strong></div>
+            <div><span>Two group distributions</span><strong>Mann–Whitney U</strong></div>
+            <div><span>Two categorical variables</span><strong>Chi-square</strong></div>
+            <div><span>Ranked relationship</span><strong>Spearman</strong></div>
+          </div>
+          <p class="diagram-caption">Method map based on <code>src/analytics/hypothesis_testing.py</code>. It describes available procedures, not validated outcomes. Simulated transaction comparisons are not causal evidence.</p>
+        </div>
+
+        <details class="method-details">
+          <summary>What else was explored?</summary>
+          <div class="details-content">
+            <p>Other source figures add payment-by-price and payment-by-region heatmaps, delivery comparisons, additional rating distributions, discount-tier and volume views, and campaign or weekday/hour comparisons. Their underlying transaction patterns are generated, and several figures need a fresh label/readability pass before publication.</p>
+            <p>The statistical methods map below describes Welch’s t-test, Mann–Whitney U, chi-square, and Spearman procedures. The saved summary chart is not used because its reported values conflict with stored outputs and documentation.</p>
+            <p>Sources: <code>src/analytics/eda_visualizer.py</code>, <code>src/analytics/hypothesis_testing.py</code>, and `docs/stages/09_exploratory_data_analysis.md` / `10_statistical_hypothesis_testing.md`.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section-shell narrative-section customer-section" id="customers" aria-labelledby="customers-title">
+      <div class="section-index">05 <span>Customer analytics</span></div>
+      <div class="section-content">
+        <p class="eyebrow">Segmentation and repeat-order patterns</p>
+        <h2 id="customers-title">Describe behavior before naming a segment.</h2>
+        <p class="section-lede">The RFM module builds customer-level recency, frequency, and monetary measures from generated orders, then assigns quintile scores. The saved segment chart routes some score combinations to “Others,” despite the stage report’s claim of 11 fully assigned segments, so its distribution is not reproduced here.</p>
+        <figure class="rfm-method-figure">
+          <div class="rfm-method" role="img" aria-label="Explanatory RFM method: recency measures days since last generated order, frequency counts orders, and monetary sums order value. Each measure receives a quintile score before segment rules are applied.">
+            <div><span>R / RECENCY</span><strong>Days since last order</strong><small>Lower days → higher score</small></div>
+            <div><span>F / FREQUENCY</span><strong>Orders per customer</strong><small>More orders → higher score</small></div>
+            <div><span>M / MONETARY</span><strong>Total order value</strong><small>Higher total → higher score</small></div>
+            <p>Three quintile scores → segment rules</p>
+          </div>
+          <figcaption>Method sketch based on <code>src/analytics/customer_rfm.py</code>. It explains the measures and scoring direction; it is not a customer count or business result.</figcaption>
+        </figure>
+        <figure class="feature-figure feature-figure--cohort">
+          <div class="figure-heading"><p class="figure-kicker">Cohort analysis · generated orders</p><h3>How does repeat ordering vary by first-order month?</h3></div>
+          <div class="figure-scroll" tabindex="0" role="region" aria-label="Cohort retention heatmap. On narrow screens, scroll horizontally to read the full chart.">
+            <img src="assets/charts/simulated-cohort-retention.png" width="4200" height="2400" alt="A cohort heatmap shows, for each first-order month from October 2025 through October 2026, the share of generated customers who placed an order in each later month. Month zero is 100 percent by definition; recent cohorts have fewer observable periods." loading="lazy" decoding="async">
+          </div>
+          <figcaption><span>Monthly cohort repeat-order share</span><span><code>reports/figures/12_02_cohort_retention_heatmap.png</code></span></figcaption>
+          <a class="figure-expand" href="assets/charts/simulated-cohort-retention.png" target="_blank" rel="noopener noreferrer">Open full-size figure <span aria-hidden="true">↗</span></a>
+          <p class="figure-note">A cohort is defined by each customer’s first generated order month; later cells show the share with an order in that elapsed month. The cohorts are simulated, recent groups are right-censored, and this is not actual Uzum retention.</p>
+        </figure>
+      </div>
+    </section>
+
+    <section class="ochre-section" aria-labelledby="assortment-title">
+      <div class="section-shell narrative-section">
+        <div class="section-index">06 <span>Product &amp; inventory</span></div>
+        <div class="section-content">
+          <p class="eyebrow">A prioritization lens, not an inventory outcome</p>
+          <h2 id="assortment-title">ABC meets demand variability.</h2>
+          <p class="section-lede">The product analytics module combines cumulative value classes (ABC) with variability classes (XYZ) to make assortment behavior easier to discuss. It is a framework for prioritization—not proof of reduced stockouts or inventory savings.</p>
+          <figure class="feature-figure feature-figure--matrix">
+            <div class="figure-scroll" tabindex="0" role="region" aria-label="ABC and XYZ assortment matrix. Scroll horizontally on narrow screens.">
+              <img src="assets/charts/abc-xyz-assortment-matrix.png" width="2400" height="1800" alt="A three-by-three heatmap crosses ABC cumulative-value classes A, B, C with XYZ demand-variability classes X, Y, Z. Cell labels show product counts in the analyzed simulated-order dataset; the C-Z cell is the largest." loading="lazy" decoding="async">
+            </div>
+            <figcaption><span>04 / Assortment matrix</span><span>Source: <code>reports/figures/13_01_abc_xyz_matrix_heatmap.png</code></span></figcaption>
+            <a class="figure-expand" href="assets/charts/abc-xyz-assortment-matrix.png" target="_blank" rel="noopener noreferrer">Open full-size figure <span aria-hidden="true">↗</span></a>
+            <p class="figure-note">Counts are derived from the project’s available dataset. Class boundaries are documented in Stage 13; the matrix does not establish what a real retailer should stock without actual sales and inventory records.</p>
+          </figure>
+          <div class="basket-visual" role="img" aria-label="Explanatory market basket workflow: multi-item generated baskets become candidate product pairs, which are summarized with support, confidence, and lift. Association is not causation or recommendation quality.">
+            <div><span>01 / INPUT</span><strong>Multi-item baskets</strong><small>Generated order lines</small></div>
+            <div><span>02 / PAIRS</span><strong>Product co-occurrence</strong><small>Pairs within an order</small></div>
+            <div><span>03 / MEASURES</span><strong>Support · confidence · lift</strong><small>Association statistics</small></div>
+          </div>
+          <p class="diagram-caption">Market basket method in <code>src/analytics/product_analytics.py</code>. The saved top-rules plot contains very large Lift values and remains unused until support counts and rule behavior are reconciled.</p>
+          <div class="method-columns">
+            <div><h3>Basket associations</h3><p>Apriori-style pair rules are available in <code>data/processed/market_basket_rules.csv</code>. Lift describes co-occurrence relative to independence; it is not a recommendation uplift. The saved top-rules graphic has extreme Lift values and is omitted pending support-count review.</p></div>
+            <div><h3>Pricing relationships</h3><p>Category log-log estimates are stored in <code>data/processed/price_elasticity_by_category.csv</code>. Cross-sectional product comparisons do not identify causal price elasticity. Treat pricing ideas as hypotheses for future experiments.</p>
+              <div class="pricing-visual" role="img" aria-label="Explanatory pricing method: within-category product price and order-count fields enter a log-log slope calculation; its coefficient is an observational association and not a causal estimate.">
+                <span>Price + order count</span><b>→</b><span>Within-category log / log slope</span><b>→</b><span>Association to validate</span>
+              </div>
+              <p class="pricing-caveat">Method sketch from <code>src/analytics/pricing_engine.py</code>. The saved coefficient figure includes extreme positive and negative values and is omitted pending validation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell narrative-section" id="models" aria-labelledby="models-title">
+      <div class="section-index">07 <span>Predictive experiments</span></div>
+      <div class="section-content">
+        <p class="eyebrow">Methods and artifacts are present; scores need reconciliation</p>
+        <h2 id="models-title">Experiments worth validating <em>before they become claims.</em></h2>
+        <figure class="feature-figure feature-figure--wide model-decomposition">
+          <div class="figure-heading"><p class="figure-kicker">Time-series method · generated history</p><h3>Separate trend, weekly structure, and residual variation.</h3></div>
+          <div class="figure-scroll" tabindex="0" role="region" aria-label="Generated daily time-series decomposition. Scroll horizontally on narrow screens.">
+            <img src="assets/charts/simulated-series-decomposition.png" width="4200" height="3000" alt="Four-panel decomposition of generated daily gross order value: the simulated observed series, a seven-day smoothed trend, a repeated weekly seasonal component, and residuals. The growing trend and repeated weekly pattern reflect the generator's assumptions, not real demand dynamics." loading="lazy" decoding="async">
+          </div>
+          <figcaption><span>Decomposition of modeled daily order value</span><span><code>reports/figures/15_01_time_series_decomposition.png</code></span></figcaption>
+          <a class="figure-expand" href="assets/charts/simulated-series-decomposition.png" target="_blank" rel="noopener noreferrer">Open full-size figure <span aria-hidden="true">↗</span></a>
+          <p class="figure-note">This is a descriptive decomposition of synthetic history. The weekly cycle and upward trend are generated structure; they do not validate the separate 60-day forecast or establish future marketplace demand.</p>
+        </figure>
+        <div class="experiment-list">
+          <article><span>01</span><div><h3>Time series &amp; forecasting</h3><p>Decomposition and a Gradient Boosting backtest are implemented in <code>src/models/forecasting.py</code>. The stored 60-day CSV is produced by a recent-mean, weekday, and sine heuristic with fixed ±15% bounds. Published WAPE/MAPE values conflict, so no accuracy score or confidence-interval claim is shown.</p></div></article>
+          <article><span>02</span><div><h3>Bestseller classification</h3><p>Three classifiers are compared in <code>src/models/bestseller_classifier.py</code>, with a saved model and ROC/importance images. The README and stage report disagree on the winner and scores; the current split and target also merit leakage review. Results are omitted.</p></div></article>
+          <article><span>03</span><div><h3>Hybrid recommendations</h3><p><code>src/models/recommender.py</code> combines TF-IDF similarity and basket co-occurrence with fallback behavior. A model artifact and example figure exist, but no ranking-quality evaluation is recorded. This site does not load the pickle model or present it as production-ready.</p></div></article>
+        </div>
+        <section class="ai-lab" aria-labelledby="ai-lab-title">
+          <div class="ai-lab__intro">
+            <p class="figure-kicker">Interactive AI lab · offline evidence</p>
+            <h3 id="ai-lab-title">Explore the model inputs.<br><em>Inspect a recommendation run.</em></h3>
+            <p>One panel checks a bestseller scenario against the classifier’s documented feature requirements. The other browses a small set of precomputed recommender outputs made from this project’s catalog and generated order history.</p>
+            <p class="ai-lab__boundary"><strong>Data boundary.</strong> Product attributes come from the saved catalog snapshot. Basket co-occurrence uses synthetically generated orders; these examples do not use or reveal Uzum’s internal transactions.</p>
+          </div>
+          <div class="ai-lab__grid">
+            <section class="ai-tool" aria-labelledby="bestseller-tool-title">
+              <div class="ai-tool__heading"><p class="figure-kicker">01 / Classifier</p><h4 id="bestseller-tool-title">Bestseller scenario</h4><p>Input review only · no probability is produced</p></div>
+              <form id="bestseller-form" class="scenario-form">
+                <label for="scenario-price">Product price <span>UZS</span></label>
+                <input id="scenario-price" name="price" type="number" min="1" max="1000000000" step="1000" value="249000" required inputmode="numeric">
+                <label for="scenario-discount">Discount <span>%</span></label>
+                <input id="scenario-discount" name="discount" type="number" min="0" max="100" step="0.1" value="15" required inputmode="decimal">
+                <label for="scenario-installment">Installment availability</label>
+                <select id="scenario-installment" name="installment"><option value="yes">Available</option><option value="no">Not available</option></select>
+                <button class="text-link ai-tool__button" type="submit">Review feature requirements <span aria-hidden="true">↗</span></button>
+              </form>
+              <div class="ai-output" id="scenario-output" role="status" aria-live="polite" aria-atomic="true">
+                <p class="ai-output__label">No model prediction</p>
+                <p>These controls capture three supported catalog fields. The saved model also requires category-relative price, category frequency, rating and review features, delivery time, and encoded price and discount tiers. Its exact inference schema has not been verified for safe use here.</p>
+              </div>
+              <p class="ai-tool__note">The classifier target is defined from catalog <code>orders_count</code>. Bestseller results therefore need leakage and generalization review before interpretation.</p>
+            </section>
+            <section class="ai-tool ai-tool--recommendations" aria-labelledby="recommendation-tool-title">
+              <div class="ai-tool__heading"><p class="figure-kicker">02 / Hybrid recommender</p><h4 id="recommendation-tool-title">Browse an example</h4><p>Precomputed offline output · not live inference</p></div>
+              <label for="recommendation-product">Starting product</label>
+              <select id="recommendation-product" class="recommendation-select"><option value="">Loading examples…</option></select>
+              <div id="recommendation-output" class="recommendation-output" aria-live="polite" aria-busy="true"><p>Select a product to inspect its saved result.</p></div>
+              <p class="ai-tool__note">The source method blends title/category TF-IDF cosine similarity with normalized basket co-occurrence at equal weight, then ranks the combined score. Similarity is not confidence or recommendation quality. Synthetic baskets shape the co-occurrence signal.</p>
+            </section>
+          </div>
+          <p class="ai-lab__method">Availability note: the website does not run the saved pickle files. This static lab makes no external API calls, exposes no customer records, and ships only a limited set of catalog-level recommendation examples.</p>
+        </section>
+        <div class="model-visuals">
+          <div class="model-method" role="img" aria-label="Explanatory classifier evaluation workflow: prepared features lead to a validation split and leakage review, then three classifier candidates and metric comparison. No model scores or winner are shown.">
+            <p class="figure-kicker">Classification · validation map</p>
+            <div><span>Features</span><span>Validation split + leakage review</span><span>Three candidates</span><span>Compare after re-run</span></div>
+            <p>Workflow summary based on <code>src/models/bestseller_classifier.py</code>. Candidate ranking and performance remain unreported until the target and split are audited.</p>
+          </div>
+          <div class="model-method" role="img" aria-label="Explanatory recommender workflow: product title and category feed TF-IDF similarity; generated order baskets feed co-occurrence; the two scores are blended for top-K ranking, with a popularity fallback for unseen products.">
+            <p class="figure-kicker">Recommendation · hybrid construction</p>
+            <div class="recommendation-map"><span>Title + category<br><small>TF–IDF similarity</small></span><b>+</b><span>Generated baskets<br><small>Co-occurrence</small></span><b>→</b><span>Blend → top-K<br><small>Popularity fallback</small></span></div>
+            <p>Construction follows <code>src/models/recommender.py</code>. Basket signals come from simulated orders; the diagram describes the code path, not an evaluated ranking or user-facing recommendation result.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dark-section" aria-labelledby="interface-title">
+      <div class="section-shell narrative-section narrative-section--dark">
+        <div class="section-index">08 <span>Engineering &amp; interface</span></div>
+        <div class="section-content">
+          <p class="eyebrow">A separate analyst-facing interface</p>
+          <h2 id="interface-title">The portfolio explains the work.<br><em>Streamlit explores it.</em></h2>
+          <p class="section-lede">The repository includes a five-tab Streamlit application in <code>src/dashboard/app.py</code>. It is a separate project interface and was not launched during this build.</p>
+          <figure class="dashboard-map">
+            <div class="dashboard-map__root">Streamlit application <code>src/dashboard/app.py</code></div>
+            <div class="dashboard-map__tabs" role="img" aria-label="Explanatory map of the five sections in the Streamlit app: executive overview and unit economics; customer RFM and cohorts; assortment and pricing; forecast and restocking; bestseller simulator and recommender.">
+              <div><span>01</span><strong>Overview</strong><small>Unit economics</small></div>
+              <div><span>02</span><strong>Customers</strong><small>RFM + cohorts</small></div>
+              <div><span>03</span><strong>Products</strong><small>Assortment + pricing</small></div>
+              <div><span>04</span><strong>Forecast</strong><small>Restocking</small></div>
+              <div><span>05</span><strong>Experiments</strong><small>Classifier + recommender</small></div>
+            </div>
+            <figcaption>Navigation schematic based on the five entries passed to <code>st.tabs()</code>; it is not a dashboard screenshot. The app was not run during this build.</figcaption>
+          </figure>
+          <p class="engineering-caveat">Docker configuration and test files are present. No successful container build, hosted dashboard, Kaggle publication, or passing test run is claimed on this page.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell narrative-section limits-section" id="limits" aria-labelledby="limits-title">
+      <div class="section-index">09 <span>Limits &amp; next work</span></div>
+      <div class="section-content">
+        <p class="eyebrow">What the evidence supports</p>
+        <h2 id="limits-title">A useful model of the work.<br><em>A clear boundary around the claims.</em></h2>
+        <div class="limits-grid">
+          <article><h3>Data</h3><p>Transaction and customer histories are synthetic. The product snapshot is associated with a public-feed scraper, but a crawl log or reproducible snapshot provenance is not included.</p></article>
+          <article><h3>Inference</h3><p>Comparisons, associations, and generated seasonality do not demonstrate causal changes in price response, conversion, customer retention, or sales.</p></article>
+          <article><h3>Validation</h3><p>Forecast and classifier reports conflict; stored artifacts were not executed or loaded for this site. Tests, deployment, and external publication remain unverified.</p></article>
+        </div>
+        <p class="next-work">Next experiments: obtain transaction and inventory data with an appropriate source; evaluate forecasts with a reproducible rolling origin; audit classifier leakage; and assess recommendation ranking with offline metrics.</p>
+      </div>
+    </section>
+
+    <section class="resources-section" aria-labelledby="resources-title">
+      <div class="section-shell resources-shell">
+        <div class="section-index">10 <span>Evidence &amp; resources</span></div>
+        <div class="resources-content">
+          <p class="eyebrow">Continue the investigation</p>
+          <h2 id="resources-title">Sources for the curious.</h2>
+          <p class="resources-intro">The repository is the source-code and documentation reference. The Kaggle link is provided as the dataset-page destination. These links do not imply access to private Uzum transactions.</p>
+          <div class="resource-entry">
+            <div><p class="resource-entry__type">Source code &amp; documentation</p><h3>GitHub</h3><p>Explore the project repository, Python source code, analytical modules, documented project stages, and available implementation artifacts.</p></div>
+            <a href="https://github.com/davronprogammer/uzum_data_ml_project" target="_blank" rel="noopener noreferrer">Explore repository <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="resource-entry">
+            <div><p class="resource-entry__type">Dataset page</p><h3>Kaggle</h3><p>Visit the project’s Kaggle dataset page to inspect its published description and available data resources.</p></div>
+            <a href="https://www.kaggle.com/datasets/kaggledotnet1/uzum-dataset/" target="_blank" rel="noopener noreferrer">View dataset <span aria-hidden="true">↗</span></a>
+          </div>
+          <p class="resource-verification">The URLs are included as supplied. Automated URL fetching was unavailable during implementation; verify both destinations before publication.</p>
+          <p class="resource-config-note">Both external URLs are defined once in this resource section in <code>web/index.html</code> for straightforward updates.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="section-shell site-footer__inner">
+      <p>Uzum Market · Independent data science case study</p>
+      <a href="#top">Back to the beginning</a>
+      <p class="site-footer__note">Not affiliated with Uzum. Transaction-derived results use simulated project data.</p>
+    </div>
+  </footer>
+</body>
+</html>

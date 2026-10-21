@@ -12,6 +12,7 @@ Ushbu repository O'zbekistondagi yetakchi milliy marketplace — **Uzum Market**
 
 Loyiha oddiy tadqiqot daftarchalari bilan cheklanmay, real ishlab chiqarish (production) arxitekturasi, tozalangan ma'lumotlar ombori, ekonometrik narx elastikligi, mijozlar RFM segmentatsiyasi, talab prognozi (Forecasting), Sun'iy Intellekt klassifikatori va boshqaruvchi (C-Suite) BI dashboardini o'z ichiga oladi.
 
+project link: https://uzum-dataset.netlify.app/
 ---
 
 ## Asosiy Biznes va ML Metrikalari
